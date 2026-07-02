@@ -1,181 +1,508 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reconhecedor de Dígitos por IA</title>
+    <title>Projeto Neural AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
+        /* Variáveis de Cores */
+        :root {
+            --cor-fundo-primario: #0A0A1A; /* Quase preto azulado */
+            --cor-fundo-secundario: #1A1A3A; /* Azul escuro */
+            --cor-texto-claro: #E0E0FF; /* Branco azulado */
+            --cor-destaque-azul: #00BFFF; /* Azul vibrante */
+            --cor-destaque-roxo: #8A2BE2; /* Azul violeta */
+            --cor-destaque-verde: #00FF00; /* Verde neon (para detalhes) */
+            --cor-borda: #333366;
+            --cor-input-bg: #111122;
+        }
+
+        /* Reset Básico */
+        * {
             margin: 0;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 350px;
-        }
-        input[type="file"] {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: calc(100% - 22px);
+            padding: 0;
             box-sizing: border-box;
         }
-        button {
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--cor-fundo-primario);
+            color: var(--cor-texto-claro);
+            line-height: 1.6;
+            overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+            scroll-behavior: smooth; /* Rolagem suave para navegação */
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif; /* Fonte futurista para títulos */
+            color: var(--cor-destaque-azul);
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.5); /* Efeito de brilho */
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 40px;
+        }
+
+        section {
+            padding: 80px 5%;
+            min-height: 100vh; /* Cada seção ocupa pelo menos a altura da viewport */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        /* --- ATO 1: INTRODUÇÃO --- */
+        #intro {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?futuristic,technology,neural-network') center/cover no-repeat;
+            /* Placeholder: Troque a URL acima por uma imagem sua ou procure em unsplash.com */
+            /* Sugestões de busca: 'futuristic technology', 'neural network abstract', 'circuit board blue' */
+            color: var(--cor-texto-claro);
+        }
+
+        #intro h1 {
+            font-size: 4.5em;
+            margin-bottom: 20px;
+            animation: fadeInDown 1.5s ease-out; /* Animação de entrada */
+        }
+
+        #intro p {
+            font-size: 1.4em;
+            max-width: 800px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.5s ease-out 0.5s backwards; /* Animação com delay */
+        }
+
+        .btn-saiba-mais {
+            background-color: var(--cor-destaque-roxo);
+            color: var(--cor-texto-claro);
             padding: 15px 30px;
-            font-size: 1.2em;
-            background-color: #4CAF50;
-            color: white;
             border: none;
-            border-radius: 5pped;
+            border-radius: 5px;
+            font-size: 1.2em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px var(--cor-destaque-roxo); /* Brilho inicial */
+            animation: pulseGlow 2s infinite alternate; /* Animação de pulso */
         }
-        button:hover {
-            background-color: #45a049;
+
+        .btn-saiba-mais:hover {
+            background-color: var(--cor-destaque-azul);
+            transform: translateY(-5px); /* Efeito de elevação */
+            box-shadow: 0 0 25px var(--cor-destaque-azul); /* Brilho ao passar o mouse */
         }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+
+        /* --- ATO 2: EXPLICAÇÃO (Placeholder) --- */
+        #explanation {
+            background-color: var(--cor-fundo-secundario);
+            color: var(--cor-texto-claro);
         }
-        #loading {
+
+        #explanation .content {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 900px;
             margin-top: 20px;
-            font-size: 1.1em;
-            color: #555;
-            display: none;
+            border: 1px solid var(--cor-borda);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
         }
-        #fileWarning {
-            color: red;
+      /* --- ATO 2: EXPLICAÇÃO (Conceitos Chave e Visual Aprimorado) --- */
+       /* --- ATO 2: EXPLICAÇÃO (Conceitos Chave e Visual Aprimorado) --- */
+        #explanation {
+            background-color: var(--cor-fundo-secundario);
+            color: var(--cor-texto-claro);
+            padding: 80px 5%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .core-concepts-diagram {
+            display: flex;
+            flex-wrap: wrap; /* Permite que os cards quebrem a linha */
+            justify-content: center;
+            gap: 40px; /* Espaço maior entre os cards */
+            margin-top: 50px;
+            width: 100%;
+            max-width: 1200px;
+            position: relative; /* Para possíveis futuras setas absolutas */
+        }
+
+        .concept-card {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--cor-destaque-azul);
+            border-radius: 15px; /* Cantos bem arredondados */
+            padding: 20px 30px; /* Mais padding para conteúdo */
+            width: 350px; /* Largura maior para os cards */
+            min-height: 180px; /* Altura mínima para acomodar conteúdo */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden; /* Garante que o conteúdo que some fique contido */
+            transition: all 0.4s ease-in-out; /* Transição mais suave */
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); /* Brilho inicial */
+            cursor: pointer;
+        }
+
+        /* Ajustes para simular um layout mais 'solto' ou 'escalonado' como na base.png */
+        .concept-card:nth-child(even) { /* A cada segundo card */
+            transform: translateY(20px); /* Move ligeiramente para baixo */
+        }
+        .concept-card:nth-child(odd) { /* A cada primeiro card */
+            transform: translateY(-20px); /* Move ligeiramente para cima */
+        }
+        /* No hover, removemos o transform para centralizar */
+        .concept-card:hover {
+             transform: translateY(0);
+        }
+
+        .concept-card:hover {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-color: var(--cor-destaque-roxo);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.7); /* Brilho roxo mais intenso no hover */
+            transform: scale(1.03); /* Leve zoom no hover */
+        }
+
+        .concept-card .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em; /* Título maior */
+            color: var(--cor-destaque-azul);
+            margin-bottom: 10px;
+            /* Z-index removido/padrão para ser coberto */
+            transition: color 0.4s ease, opacity 0.4s ease, visibility 0.4s ease; /* Adicionado transição para opacity/visibility */
+            z-index: 0; /* Coloca o título por baixo do conteúdo ao revelar */
+        }
+
+        .concept-card:hover .card-title {
+            opacity: 0; /* Torna o título invisível no hover */
+            visibility: hidden;
+            color: var(--cor-destaque-roxo); /* A cor pode mudar mesmo se invisível, mas não será visto */
+        }
+
+        .concept-card .card-content {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(0, 0, 0); /* AGORA TOTALMENTE OPACO para cobrir o título */
+            padding: 15px;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            color: var(--cor-texto-claro);
+            font-size: 1em;
+            z-index: 1; /* Garante que o conteúdo esteja por cima do título quando visível */
+        }
+        
+        .concept-card:hover .card-content {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .concept-card .card-content p {
+            margin-bottom: 8px;
+            font-weight: 400; /* Menos negrito para o corpo do texto */
+            line-height: 1.4;
+        }
+
+        /* REMOVEMOS O SPAN, entao nao precisamos mais deste estilo */
+        /*
+        .concept-card .card-content span {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            color: var(--cor-destaque-verde);
             margin-top: 10px;
-            font-size: 0.9em;
-            display: none;
+            display: block;
+        }
+        */
+
+        .diagram-instruction {
+            margin-top: 60px; /* Mais espaço para a instrução */
+            font-size: 1.2em;
+            font-style: italic;
+            color: rgba(224, 224, 255, 0.8);
+            animation: pulseText 2s infinite alternate; /* Animação sutil para a instrução */
+        }
+
+        @keyframes pulseText {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Media Queries para responsividade */
+        @media (max-width: 900px) {
+            .core-concepts-diagram {
+                flex-direction: column; /* Empilha os cards verticalmente */
+                gap: 30px;
+            }
+            .concept-card {
+                width: 90%; /* Ocupa mais largura em telas menores */
+                max-width: 400px;
+                transform: translateY(0) !important; /* Remove os offsets em telas menores */
+            }
+            .concept-card:nth-child(even),
+            .concept-card:nth-child(odd) {
+                transform: translateY(0);
+            }
+            .diagram-instruction {
+                margin-top: 40px;
+                font-size: 1.1em;
+            }
+        }
+        /* --- ATO 3: DEMONSTRAÇÃO (Placeholder) --- */
+
+        /* Os outros estilos do Ato 3 permanecem como estão */
+        #demo {
+            background-color: var(--cor-fundo-primario);
+            color: var(--cor-texto-claro);
+        }
+
+        #demo .content {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 700px;
+            margin-top: 20px;
+            border: 1px solid var(--cor-borda);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            width: 100%; /* Para garantir que o conteúdo interno se ajuste */
+        }
+        #uploadForm {
+            margin-top: 20px;
+            padding-inline: 25px; /* Espaço entre os elementos do formulário */
+        }
+        /* Animações CSS */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px var(--cor-destaque-roxo); }
+            100% { box-shadow: 0 0 25px var(--cor-destaque-roxo), 0 0 35px rgba(138, 43, 226, 0.6); }
+        }
+
+        /* Os outros estilos do Ato 3 permanecem como estão */
+        /* Media Queries para Responsividade Básica */
+        @media (max-width: 768px) {
+            #intro h1 {
+                font-size: 3em;
+            }
+            #intro p {
+                font-size: 1.1em;
+            }
+            .btn-saiba-mais {
+                font-size: 1em;
+                padding: 12px 25px;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            section {
+                padding: 60px 3%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Reconhecedor de Dígitos com IA</h1>
-        <p>Selecione uma imagem (PNG, JPG, JPEG, GIF) para análise:</p>
-        <input type="file" id="imageUpload" name="image" accept="image/png, image/jpeg, image/jpg, image/gif">
-        <div id="fileWarning">Por favor, selecione um arquivo de imagem.</div>
-        <button id="predictButton">Analisar Imagem</button>
-        <div id="loading" style="display:none;">Aguardando imagem...</div>
-        <div id="predictionResult"></div> ```
-    </div>
 
-<script>
-    document.getElementById('predictButton').addEventListener('click', async () => {
-        const button = document.getElementById('predictButton');
-        const loadingDiv = document.getElementById('loading');
-        const fileInput = document.getElementById('imageUpload');
-        const fileWarning = document.getElementById('fileWarning');
-        const resultDiv = document.getElementById('predictionResult');
+    <section id="intro">
+        <h1>A matemática por trás<br>das IAs</h1>
+        <p>Explore o fascinante mundo da Inteligência Artificial e descubra como as Redes Neurais podem aprender a "enxergar" e interpretar o mundo ao nosso redor.</p>
+        <a href="#explanation" class="btn-saiba-mais">Saiba Mais</a>
+    </section>
 
-        // Limpa mensagens anteriores
-        fileWarning.style.display = 'none';
-        resultDiv.textContent = '';
-        loadingDiv.textContent = 'Aguardando imagem...';
+<section id="explanation">
+        <h2>A Essência do Aprendizado de Máquina</h2>
+        <div class="core-concepts-diagram">
 
-        if (fileInput.files.length === 0) {
-            fileWarning.style.display = 'block';
-            return;
-        }
+            <div class="concept-card concept-weights">
+                <p class="card-title">Pesos & Vieses</p>
+                <div class="card-content">
+                    <p>Os parâmetros ajustáveis da rede. Definem a força das conexões (pesos) e o limiar de ativação (vieses) de cada neurônio.</p>
+                    </div>
+            </div>
 
-        button.disabled = true;
-        loadingDiv.style.display = 'block';
-        loadingDiv.textContent = 'Analisando... Por favor, aguarde.';
+            <div class="concept-card concept-loss">
+                <p class="card-title">Função de Perda</p>
+                <div class="card-content">
+                    <p>Mede o "erro" da rede: quão distante a previsão feita está do valor real. O objetivo é minimizá-la.</p>
+                    </div>
+            </div>
 
-        const formData = new FormData();
-        formData.append('image', fileInput.files[0]);
+            <div class="concept-card concept-backprop">
+                <p class="card-title">Backpropagation</p>
+                <div class="card-content">
+                    <p>Algoritmo que calcula eficientemente como cada peso e viés contribui para o erro total da rede (os "gradientes").</p>
+                    </div>
+            </div>
 
-        const controller = new AbortController();
-        const TIMEOUT_DURATION = 30000; // 30 segundos
-        const timeoutId = setTimeout(() => {
-            controller.abort();
-            console.error("Requisição cancelada por timeout após " + TIMEOUT_DURATION / 1000 + " segundos.");
-            loadingDiv.textContent = 'Erro: A requisição demorou muito para responder. Verifique o servidor.';
-            alert('Ocorreu um erro: A requisição demorou muito para responder. Verifique o servidor e sua conexão.');
-        }, TIMEOUT_DURATION);
+            <div class="concept-card concept-gradient">
+                <p class="card-title">Gradiente Descendente</p>
+                <div class="card-content">
+                    <p>Método iterativo para ajustar os Pesos e Vieses na direção que mais rapidamente reduz a Função de Perda.</p>
+                    </div>
+            </div>
 
-        try {
-            const response = await fetch('/api/predict', { // <<-- URL relativa
-                method: 'POST', // <<-- Método POST
-                body: formData,
-                signal: controller.signal
-            });
+        </div>
+        <p class="diagram-instruction">Passe o mouse sobre os conceitos para desvendar sua função no aprendizado da Rede Neural.</p>
+    </section>
 
-            clearTimeout(timeoutId);
+    <section id="demo">
+        <h2>Teste na Prática: Reconhecimento de Dígitos</h2>
+        <div class="content">
+            <p>Carregue uma imagem com dígitos escritos no paint e veja nossa IA em ação!</p>
+            <p>Exemplos:</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/MnistExamples.png" alt="Exemplo de dígitos" style="max-width: 100%; height: auto; margin-bottom: 20px; border: 1px solid var(--cor-borda); border-radius: 5px; box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);">
+            <form id="uploadForm">
+                <input type="file" id="fileInput" name="file" accept="image/*" style="margin-bottom: 20px; padding: 10px; background-color: var(--cor-input-bg); border: 1px solid var(--cor-borda); color: var(--cor-texto-claro); border-radius: 5px;">
+                <button type="submit" id="predictButton" style="background-color: var(--cor-destaque-azul); color: var(--cor-texto-claro); padding: 10px 20px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; transition: background-color 0.3s ease;">Analisar Imagem</button>
+            </form>
 
-            let responseData; // Variável para armazenar o corpo da resposta lido UMA VEZ
-            let rawResponseText = ''; // Para armazenar o texto puro se JSON falhar
+            <div id="loadingDiv" style="margin-top: 20px; font-weight: bold; color: var(--cor-destaque-verde);">Aguardando...</div>
+            <div id="resultDiv" style="margin-top: 10px; font-size: 1.2em;"></div>
 
-            // --- INÍCIO DA LÓGICA DE LEITURA ÚNICA DO CORPO DA RESPOSTA ---
-            try {
-                // Tenta ler como JSON primeiro.
-                responseData = await response.json();
-            } catch (jsonParseError) {
-                console.warn('Não foi possível parsear a resposta como JSON. Tentando ler como texto.', jsonParseError);
-                try {
-                    // Se falhar, tenta ler como texto.
-                    rawResponseText = await response.text();
-                    responseData = { success: false, message: `Resposta não é JSON válida ou incompleta: ${rawResponseText.substring(0, 200)}...` };
-                } catch (textReadError) {
-                    console.error('Erro ao ler a resposta como texto:', textReadError);
-                    responseData = { success: false, message: 'Não foi possível ler a resposta do servidor.' };
-                }
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const uploadForm = document.getElementById('uploadForm');
+                    const fileInput = document.getElementById('fileInput');
+                    const predictButton = document.getElementById('predictButton');
+                    const loadingDiv = document.getElementById('loadingDiv');
+                    const resultDiv = document.getElementById('resultDiv');
+
+                    uploadForm.addEventListener('submit', async (event) => {
+                        event.preventDefault(); // Evita o recarregamento da página
+
+                        const file = fileInput.files[0];
+                        if (!file) {
+                            resultDiv.textContent = 'Por favor, selecione um arquivo.';
+                            return;
+                        }
+
+                        predictButton.disabled = true;
+                        loadingDiv.textContent = 'Analisando imagem...';
+                        resultDiv.textContent = ''; // Limpa o resultado anterior
+
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos de timeout
+
+                        try {
+                            const response = await fetch('/api/predict', {
+                                method: 'POST',
+                                body: formData,
+                                signal: controller.signal
+                            });
+
+                            clearTimeout(timeoutId);
+
+                            let responseData;
+                            let rawResponseText = '';
+
+                            try {
+                                responseData = await response.json();
+                            } catch (jsonParseError) {
+                                console.warn('Não foi possível parsear a resposta como JSON. Tentando ler como texto.', jsonParseError);
+                                try {
+                                    rawResponseText = await response.text();
+                                    responseData = { success: false, message: `Resposta do servidor inválida/vazia. Conteúdo: ${rawResponseText.substring(0, 200)}...` };
+                                } catch (textReadError) {
+                                    console.error('Erro fatal ao tentar ler a resposta do servidor como texto:', textReadError);
+                                    responseData = { success: false, message: 'Erro fatal: Não foi possível ler a resposta do servidor.' };
+                                }
+                            }
+
+                            if (!response.ok) {
+                                let errorMessage = `Erro HTTP! Status: ${response.status}`;
+                                if (responseData && responseData.message) {
+                                    errorMessage = responseData.message;
+                                } else if (rawResponseText) {
+                                    errorMessage = `Detalhes: ${rawResponseText.substring(0, 200)}...`;
+                                }
+                                console.error('Erro na resposta do servidor (HTTP status diferente de OK):', errorMessage, responseData);
+                                loadingDiv.textContent = `Erro do servidor: ${response.status}. Detalhes no console.`;
+                                resultDiv.textContent = `Erro: ${errorMessage}`;
+                            } else {
+                                if (responseData.success) {
+                                    const fullPredictionString = responseData.prediction;
+                                    const match = fullPredictionString.match(/Número Previsto: (\d+)/);
+
+                                    let displayedPrediction = "Não detectado";
+                                    if (match && match[1]) {
+                                        displayedPrediction = match[1];
+                                    } else {
+                                        displayedPrediction = fullPredictionString.replace("IMAGEM: 'meus_digitos.png' -> ", "");
+                                    }
+
+                                    resultDiv.textContent = `Previsão da IA: ${displayedPrediction}`;
+                                    loadingDiv.textContent = 'Análise concluída.';
+                                } else {
+                                    resultDiv.textContent = `Erro na predição: ${responseData.message || 'Erro desconhecido.'}`;
+                                    loadingDiv.textContent = 'Ocorreu um erro durante a análise.';
+                                }
+                            }
+
+                        } catch (error) {
+                            clearTimeout(timeoutId);
+                            if (error.name === 'AbortError') {
+                                console.warn("Requisição abortada (provavelmente por timeout ou pelo usuário).");
+                                loadingDiv.textContent = 'Análise cancelada.';
+                                resultDiv.textContent = 'Análise cancelada.';
+                            } else {
+                                console.error('Erro na requisição ou na rede:', error);
+                                loadingDiv.textContent = 'Erro de comunicação. Verifique o console.';
+                                resultDiv.textContent = 'Erro de comunicação com o servidor. Verifique o console.';
+                            }
+                        } finally {
+                            predictButton.disabled = false;
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </section>
+
+    <script>
+        document.querySelector('.btn-saiba-mais').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
             }
-            // --- FIM DA LÓGICA DE LEITURA ÚNICA DO CORPO DA RESPOSTA ---
-
-
-            if (!response.ok) {
-                // O servidor respondeu com um erro HTTP (4xx, 5xx), como 405
-                let errorMessage = `HTTP error! status: ${response.status}`;
-                if (responseData && responseData.message) {
-                    errorMessage += `, message: ${responseData.message}`;
-                } else if (rawResponseText) {
-                    errorMessage += `, details: ${rawResponseText}`;
-                }
-                console.error('Erro na resposta do servidor (HTTP status diferente de OK):', errorMessage);
-                loadingDiv.textContent = `Erro do servidor: ${response.status}. Detalhes no console.`;
-                alert(`Ocorreu um erro do servidor (Status: ${response.status}). ${errorMessage}`);
-                return;
-            }
-
-            // A resposta é OK (status 2xx) e o responseData já está populado
-            if (responseData.success) {
-                resultDiv.textContent = `Número Previsto: ${responseData.prediction}`;
-                loadingDiv.textContent = 'Análise concluída.';
-                alert(`Previsão da IA: ${responseData.prediction}`);
-            } else {
-                resultDiv.textContent = `Erro na predição: ${responseData.message || 'Erro desconhecido.'}`;
-                loadingDiv.textContent = 'Ocorreu um erro durante a análise.';
-                alert(`Erro na predição: ${responseData.message || 'Erro desconhecido.'}`);
-            }
-
-        } catch (error) {
-            clearTimeout(timeoutId);
-            if (error.name === 'AbortError') {
-                console.warn("Requisição abortada (provavelmente por timeout ou pelo usuário).");
-            } else {
-                console.error('Erro na requisição ou na rede (provavelmente servidor offline ou bloqueado):', error);
-                loadingDiv.textContent = 'Erro ao conectar ao servidor ou processar resposta. Verifique o console.';
-                alert('Ocorreu um erro ao tentar se comunicar com o servidor. Verifique se o servidor está rodando, se a URL da API está correta, ou se há bloqueios de firewall/antivírus. Detalhes: ' + error.message);
-            }
-        } finally {
-            button.disabled = false;
-            // loadingDiv.style.display = 'none'; // Não esconde mais, apenas muda o texto
-            fileInput.value = ''; // Limpa o campo de arquivo
-        }
-    });
-</script>
+        });
+    </script>
+</body>
+</html>

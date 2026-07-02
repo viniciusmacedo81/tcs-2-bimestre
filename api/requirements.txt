@@ -1,8 +1,9 @@
-Flask
-numpy
-tensorflow
 werkzeug
 Pillow
+pillow_heif # Adicione esta linha
 scipy
-gunicorn # <--- TEM QUE ESTAR AQUI!
 Flask-Cors
+Flask
+numpy
+tflite-runtime # ou tensorflow, dependendo do que funciona para você localmente
+opencv-python # Adicione esta linha
